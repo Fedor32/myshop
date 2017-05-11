@@ -17,6 +17,7 @@
  	public $phone;
  	public $adres;
  	public $fio;
+ 	public $shop;
 
  	function __construct($id = 0)
  	{
@@ -28,6 +29,8 @@
  			foreach ($res as $k => $v) {
  				$this->$k = $v;
  			}
+ 		$res = self::$db->selectCell('SELECT shop FROM user_shop WHERE user={?}',array($id));
+ 		$this->shop = ($res) ? $res : 0;
  	}
 
  	public function login($email,$pass)

@@ -1,4 +1,5 @@
 var adminajax = '/assets/admin/ajax/admin_ajax.php';
+var dialog;
 
 
 // нажатие кнопки SUBMIT в форме
@@ -90,10 +91,43 @@ function load_superadminforms(){
     
 }
 
+//////////////////////////////////////////////////////////////////////
+//
+//  Страница категории в админке
+
+function editcat(id) {
+    dialog = bootbox.dialog({
+        title: 'Категория',
+        size: 'large',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Загрузка...</p>'
+    });
+    $.ajax({type:'POST',url:adminajax,data:'loadform=editcat&id='+id,cache: false,
+        success:function(data){
+            dialog.find('.bootbox-body').html(data);
+            var mes = 'getCategorySelect='+id+'&blocktree='+id;
+            $.ajax({type:'POST',url:adminajax,data: mes,cache: false,
+                success:function(data){
+                    $('#parent').html('<option value=0>Категория верхнего уровня</option>'+data);
+                    var parent = $('#s_parent').val();
+                    $("#parent [value='"+parent+"']").attr("selected", "selected");
+                }
+            });
+        }
+    });
+}
+
+function loadcategory(shopid){
+    var mes = 'getCategoryRow=rows&shop='+shopid;
+    $('#main-body-table').html('<tr><td colspan="4"><center><img src="/assets/admin/css/loader.gif" alt=""> Загрузка...</center></td></tr>');
+    $.ajax({type:'POST',url:adminajax,data: mes,cache: false,
+        success:function(data){
+            $('#main-body-table').html(data);
+        }
+    });        
+}
 
 
-
-
+//////////////////////////////////////////////////////////////////////
 
 
 
